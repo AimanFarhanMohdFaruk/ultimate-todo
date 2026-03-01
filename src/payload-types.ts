@@ -76,6 +76,7 @@ export interface Config {
     blog: Blog;
     'payload-uploads': PayloadUpload;
     'private-uploads': PrivateUpload;
+    todo: Todo;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
@@ -102,6 +103,7 @@ export interface Config {
     blog: BlogSelect<false> | BlogSelect<true>;
     'payload-uploads': PayloadUploadsSelect<false> | PayloadUploadsSelect<true>;
     'private-uploads': PrivateUploadsSelect<false> | PrivateUploadsSelect<true>;
+    todo: TodoSelect<false> | TodoSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
@@ -124,6 +126,9 @@ export interface Config {
     'global-privacy': GlobalPrivacySelect<false> | GlobalPrivacySelect<true>;
   };
   locale: null;
+  widgets: {
+    collections: CollectionsWidget;
+  };
   user: User;
   jobs: {
     tasks: {
@@ -599,6 +604,21 @@ export interface PrivateUpload {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "todo".
+ */
+export interface Todo {
+  id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+  dueDate: string;
+  user: string | User;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -748,6 +768,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'private-uploads';
         value: string | PrivateUpload;
+      } | null)
+    | ({
+        relationTo: 'todo';
+        value: string | Todo;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -1019,6 +1043,20 @@ export interface PrivateUploadsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "todo_select".
+ */
+export interface TodoSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  completed?: T;
+  dueDate?: T;
+  user?: T;
+  createdAt?: T;
+  updatedAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -1233,6 +1271,16 @@ export interface GlobalPrivacySelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "collections_widget".
+ */
+export interface CollectionsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'full';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

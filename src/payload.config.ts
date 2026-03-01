@@ -1,20 +1,21 @@
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { postgresAdapter } from '@payloadcms/db-postgres'
-import { buildConfig } from 'payload'
-import sharp from 'sharp'
-import { Blog } from './collections/blog'
-import { GlobalFooter, GlobalPrivacy, GlobalTerms } from './collections/global'
-import { PayloadUploads } from './collections/uploads/payload-uploads'
-import { PrivateUploads } from './collections/uploads/private-uploads'
-import { Users } from './collections/users'
-import { defaultLexical } from './fields/default-lexical'
-import { getEmailAdapter } from './lib/email-adapter'
-import { getServerSideURL } from './lib/payload'
-import { plugins } from './plugins'
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { postgresAdapter } from '@payloadcms/db-postgres';
+import { buildConfig } from 'payload';
+import sharp from 'sharp';
+import { Blog } from './collections/blog';
+import { GlobalFooter, GlobalPrivacy, GlobalTerms } from './collections/global';
+import { PayloadUploads } from './collections/uploads/payload-uploads';
+import { PrivateUploads } from './collections/uploads/private-uploads';
+import { Users } from './collections/users';
+import { defaultLexical } from './fields/default-lexical';
+import { getEmailAdapter } from './lib/email-adapter';
+import { getServerSideURL } from './lib/payload';
+import { plugins } from './plugins';
+import { Todo } from './collections/todo';
 
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
 
 export default buildConfig({
   admin: {
@@ -56,7 +57,7 @@ export default buildConfig({
     },
   },
   email: getEmailAdapter(),
-  collections: [Users, Blog, PayloadUploads, PrivateUploads],
+  collections: [Users, Blog, PayloadUploads, PrivateUploads, Todo],
   editor: defaultLexical,
   secret: process.env.PAYLOAD_SECRET,
   typescript: {
@@ -67,10 +68,11 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || '',
     },
     idType: 'uuid',
+    push: false,
   }),
   cors: [getServerSideURL()].filter(Boolean),
   sharp,
   plugins,
   globals: [GlobalFooter, GlobalTerms, GlobalPrivacy],
   serverURL: getServerSideURL(),
-})
+});

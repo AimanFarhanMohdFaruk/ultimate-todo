@@ -1,7 +1,7 @@
 services:
   inbucket:
     image: inbucket/inbucket:latest
-    container_name: acme-inbucket
+    container_name: ultimate-todo-inbucket
     ports:
       - "9000:9000" # Web UI
       - "2500:2500" # SMTP
@@ -13,14 +13,14 @@ services:
       - INBUCKET_IMAP_DISABLED=false
       - INBUCKET_WEB_DISABLED=false
       - INBUCKET_WEB_BASE_PATH=/
-      - INBUCKET_WEB_COOKIE_AUTH_KEY=acme-dev-secret-key
+      - INBUCKET_WEB_COOKIE_AUTH_KEY=ultimate-todo-dev-secret-key
     volumes:
       - inbucket_data:/var/inbucket
     restart: unless-stopped
 
   minio:
     image: minio/minio:latest
-    container_name: acme-minio
+    container_name: ultimate-todo-minio
     ports:
       - "9001:9000" # MinIO API
       - "9002:9001" # MinIO Console
@@ -34,7 +34,7 @@ services:
 
   createbuckets:
     image: alpine:latest
-    container_name: acme-create-buckets
+    container_name: ultimate-todo-create-buckets
     depends_on:
       - minio
     environment:
@@ -54,11 +54,11 @@ services:
 
   postgres:
     image: postgres:17-alpine
-    container_name: acme-postgres
+    container_name: ultimate-todo-postgres
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=acme-website
+      - POSTGRES_DB=ultimate-todo-website
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
