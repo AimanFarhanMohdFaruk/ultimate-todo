@@ -75,4 +75,32 @@ export default buildConfig({
   plugins,
   globals: [GlobalFooter, GlobalTerms, GlobalPrivacy],
   serverURL: getServerSideURL(),
+  jobs: {
+    tasks: [
+      {
+        slug: 'checkTasksDue',
+        outputSchema: [
+          { name: 'dueCount', type: 'number' },
+          { name: 'dueTitles', type: 'json' },
+        ],
+        handler: async ({ req }) => {
+          const now = new Date().toISOString();
+          const result = await req.payload.find({
+            collection: 'todo',
+            where: {
+              dueDate: { less_than_equal: now },
+              completed: { equals: false },
+            },
+            limit: 100,
+          });
+          return {
+            output: {
+              dueCount: result.totalDocs,
+              dueTitles: result.docs.map((doc) => doc.title as string),
+            },
+          };
+        },
+      },
+    ],
+  },
 });
