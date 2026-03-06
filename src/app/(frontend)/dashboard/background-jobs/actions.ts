@@ -30,26 +30,20 @@ export async function checkTasksDue() {
 
   const latestJob = jobs.docs[0];
 
-  if (latestJob?.taskStatus && typeof latestJob.taskStatus === 'object') {
-    const status = latestJob.taskStatus as Record<string, unknown>;
-    const output = (status?.output ?? {}) as {
-      dueCount?: number;
-      dueTitles?: string[];
-    };
-    return {
-      success: true,
-      dueCount: output.dueCount ?? 0,
-      dueTitles: (output.dueTitles ?? []) as string[],
-      jobId: latestJob.id,
-      completedAt: latestJob.completedAt,
-    };
-  }
+  const now = new Date().toISOString();
+  const result = await payload.find({
+    collection: 'todo',
+    where: {
+      dueDate: { less_than_equal: now },
+      completed: { equals: false },
+    },
+    limit: 100,
+  });
 
   return {
-    success: true,
-    dueCount: 0,
-    dueTitles: [] as string[],
-    jobId: latestJob?.id,
+    dueCount: result.totalDocs,
+    dueTitles: result.docs.map((doc) => doc.title as string),
+    completedAt: latestJob?.completedAt,
   };
 }
 

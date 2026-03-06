@@ -53,6 +53,15 @@ const features: Feature[] = [
     tags: ['queues', 'cron', 'workers'],
   },
   {
+    title: 'AI System Design Case Studies',
+    link: '/dashboard/case-studies',
+    description:
+      'Work through 15 production AI system design case studies — RAG, agents, search, compliance, and more. Read, implement, and learn.',
+    icon: <BrainCircuitIcon className="size-5" />,
+    status: 'live',
+    tags: ['AI', 'system-design', 'case-studies'],
+  },
+  {
     title: 'Redis Caching',
     description:
       'Add Redis for caching, rate limiting, and session storage. Explore different caching strategies and invalidation patterns.',
