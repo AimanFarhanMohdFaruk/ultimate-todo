@@ -30,6 +30,8 @@ type JobRun = {
   error?: string;
 };
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export default function BackgroundJobsPage() {
   const [jobRuns, setJobRuns] = useState<JobRun[]>([]);
   const [isRunning, setIsRunning] = useState(false);
@@ -43,15 +45,19 @@ export default function BackgroundJobsPage() {
     setIsRunning(true);
     toast.info('Job queued — checking for due tasks...');
 
-    // Move to running after a brief moment
-    setTimeout(() => {
+    try {
+      // Keep the "queued" state visible for a short time
+      await sleep(800);
+
+      // Move to running
       setJobRuns((prev) =>
         prev.map((r) => (r.id === runId ? { ...r, state: 'running' } : r)),
       );
-    }, 500);
 
-    try {
       const result = await checkTasksDue();
+
+      // Keep the "running" state visible for a short time
+      await sleep(800);
 
       setJobRuns((prev) =>
         prev.map((r) =>
@@ -78,6 +84,9 @@ export default function BackgroundJobsPage() {
         toast.success("No overdue todos — you're all caught up!");
       }
     } catch (err) {
+      // Brief pause so the failure transition is visible
+      await sleep(400);
+
       setJobRuns((prev) =>
         prev.map((r) =>
           r.id === runId
