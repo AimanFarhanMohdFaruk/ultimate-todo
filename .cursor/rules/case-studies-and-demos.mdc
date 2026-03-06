@@ -1,0 +1,13 @@
+---
+description: AI System Design case studies and working demos — purpose and structure
+globs: "**/case-studies/**"
+alwaysApply: false
+---
+
+# Case Studies & Working Demos
+
+This section showcases **AI System Design case studies** (from ombharatiya/ai-system-design-guide). Goal: learn production AI systems by reading each study and building a **working demo** one-by-one.
+
+**Structure:** `config.ts` = canonical case study list (slug, title, description). `[slug]/page.tsx` = reader; "View working demo" only when a demo is registered. `[slug]/demo/page.tsx` = demo route (registered component or "Coming soon"). `demos/registry.tsx` = slug → demo component; `demos/coming-soon.tsx` = placeholder when no demo.
+
+**Adding a demo:** (1) Create a component in `demos/` that accepts `DemoProps` (`slug`, `title`). (2) In `registry.tsx`, import it and add `'slug': YourComponent` to `DEMO_REGISTRY`. Do not remove the registry pattern or coming-soon fallback; keep the demo page as a thin shell that looks up and renders the component.

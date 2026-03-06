@@ -9,6 +9,7 @@ import { MarkdownViewer } from '@/components/case-study/markdown-viewer';
 import { Main } from '@/components/layout/main';
 import { Button } from '@/components/ui/button';
 
+import { hasDemo } from '../demos/registry';
 import { CASE_STUDIES, getCaseStudyBySlug, getPrevNextSlugs } from '../config';
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -104,13 +105,15 @@ export default async function CaseStudyDetailPage({ params }: PageProps) {
               >
                 View on GitHub
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                render={<Link href={`/dashboard/case-studies/${slug}/demo`} />}
-              >
-                View working demo
-              </Button>
+              {hasDemo(slug) && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  render={<Link href={`/dashboard/case-studies/${slug}/demo`} />}
+                >
+                  View working demo
+                </Button>
+              )}
             </div>
 
             <MarkdownViewer content={content} className="mb-12" />
