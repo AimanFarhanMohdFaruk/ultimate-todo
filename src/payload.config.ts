@@ -13,6 +13,7 @@ import { getEmailAdapter } from './lib/email-adapter';
 import { getServerSideURL } from './lib/payload';
 import { plugins } from './plugins';
 import { Todo } from './collections/todo';
+import { RagDocs } from './collections/rag-docs';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -57,7 +58,7 @@ export default buildConfig({
     },
   },
   email: getEmailAdapter(),
-  collections: [Users, Blog, PayloadUploads, PrivateUploads, Todo],
+  collections: [Users, Blog, PayloadUploads, PrivateUploads, Todo, RagDocs],
   editor: defaultLexical,
   secret: process.env.PAYLOAD_SECRET,
   typescript: {

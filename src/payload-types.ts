@@ -77,6 +77,7 @@ export interface Config {
     'payload-uploads': PayloadUpload;
     'private-uploads': PrivateUpload;
     todo: Todo;
+    'rag-docs': RagDoc;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
@@ -104,6 +105,7 @@ export interface Config {
     'payload-uploads': PayloadUploadsSelect<false> | PayloadUploadsSelect<true>;
     'private-uploads': PrivateUploadsSelect<false> | PrivateUploadsSelect<true>;
     todo: TodoSelect<false> | TodoSelect<true>;
+    'rag-docs': RagDocsSelect<false> | RagDocsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
@@ -620,6 +622,19 @@ export interface Todo {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rag-docs".
+ */
+export interface RagDoc {
+  id: string;
+  title: string;
+  content: string;
+  user: string | User;
+  'source-file'?: (string | null) | PrivateUpload;
+  createdAt: string;
+  updatedAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -773,6 +788,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'todo';
         value: string | Todo;
+      } | null)
+    | ({
+        relationTo: 'rag-docs';
+        value: string | RagDoc;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -1055,6 +1074,18 @@ export interface TodoSelect<T extends boolean = true> {
   createdAt?: T;
   updatedAt?: T;
   deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rag-docs_select".
+ */
+export interface RagDocsSelect<T extends boolean = true> {
+  title?: T;
+  content?: T;
+  user?: T;
+  'source-file'?: T;
+  createdAt?: T;
+  updatedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
