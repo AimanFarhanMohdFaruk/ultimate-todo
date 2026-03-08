@@ -21,16 +21,16 @@ You’ll use this as your personal checklist while working through the **Enterpr
 
 ### 1.1 Understand the ingestion pipeline (from case study)
 
-- **[ ]** Re-read **“Document Ingestion Pipeline”** in the case study and summarize for yourself:
-  - **[ ]** Why we parse and clean documents.
-  - **[ ]** Why we chunk (context size, retrieval granularity).
-  - **[ ]** Why we embed and what an embedding vector is.
-  - **[ ]** What metadata is stored (doc id, department, access level, timestamps, etc.).
-- **[ ]** In your own words, write 3–5 bullet points: “What my minimal ingestion pipeline needs to do for the demo.”
+- **[x]** Re-read **“Document Ingestion Pipeline”** in the case study and summarize for yourself:
+  - **[x]** Why we parse and clean documents.
+  - **[x]** Why we chunk (context size, retrieval granularity).
+  - **[x]** Why we embed and what an embedding vector is.
+  - **[x]** What metadata is stored (doc id, department, access level, timestamps, etc.).
+- **[x]** In your own words, write 3–5 bullet points: “What my minimal ingestion pipeline needs to do for the demo.”
 
 ### 1.2 Decide your learning-time storage
 
-- **[ ]** Decide where you will store chunks and vectors for the demo:
+- **[B]** Decide where you will store chunks and vectors for the demo:
   - Option A: in‑memory arrays in `rag-actions.ts` (simplest, resets on restart).
   - Option B: a local DB (e.g. SQLite / Postgres + pgvector) for more realism.
 - **[ ]** Note pros/cons of your choice (speed, persistence, complexity).

@@ -1,12 +1,9 @@
-import { PrivateUpload } from '@/payload-types';
-import type { IngestResult, QueryResult, RagChunk } from './rag-types';
+'use server';
 
-/**
- * In-memory store for the RAG demo (learning only).
- * Replace with real storage when you implement Phase 1 (e.g. vector DB, Postgres + pgvector).
- */
-const chunksStore: RagChunk[] = [];
-let documentCounter = 0;
+import { getPath } from 'pdf-parse/worker';
+import type { IngestResult, QueryResult } from './rag-types';
+import { PDFParse } from 'pdf-parse';
+PDFParse.setWorker(getPath());
 
 /**
  * Ingest document text: chunk, embed, and store.
@@ -15,28 +12,24 @@ let documentCounter = 0;
 export async function ingestDocument(
   text: string,
   documentTitle?: string,
-  sourceFile?: PrivateUpload | null,
+  sourceFile?: File | null,
 ): Promise<IngestResult> {
   const trimmed = text.trim();
-  if (!trimmed) {
+  if (!trimmed && !sourceFile) {
     return { success: false, message: 'Please enter some text to ingest.' };
   }
+  let textToChunk: string[];
 
-  // Placeholder: store one "chunk" (whole text) so the demo has something to show.
-  // Phase 1: Replace with real chunking (e.g. by size/overlap), then embed each chunk, then store.
-  documentCounter += 1;
-  const docId = `doc-${documentCounter}`;
-  chunksStore.push({
-    id: `${docId}_0`,
-    text: trimmed.slice(0, 2000),
-    documentId: docId,
-    documentTitle: documentTitle ?? `Document ${documentCounter}`,
-    chunkIndex: 0,
-  });
+  if (sourceFile) {
+    textToChunk = await extractTextFromPDF(sourceFile);
+  } else {
+    textToChunk = [text];
+  }
+  console.log(textToChunk);
 
   return {
     success: true,
-    message: `Stored as "${documentTitle ?? docId}". Implement Phase 1: add chunking, embeddings, and your chosen storage.`,
+    message: `Stored as. Implement Phase 1: add chunking, embeddings, and your chosen storage.`,
     chunkCount: 1,
   };
 }
@@ -60,18 +53,18 @@ export async function queryRag(question: string): Promise<QueryResult> {
   // Phase 2: Embed the question, run similarity search over stored chunks, return top-k.
   // Phase 3: Build context from retrieved chunks, call LLM, return answer.
   // Phase 4: Format sources with doc title and map citations to chunks.
-  const sources = chunksStore.slice(-5).map((c) => ({
-    documentId: c.documentId,
-    documentTitle: c.documentTitle,
-    text: c.text.slice(0, 300),
-    chunkIndex: c.chunkIndex,
-  }));
-
   return {
     answer:
-      chunksStore.length > 0
-        ? 'Implement Phase 2 (retrieval) and Phase 3 (generation) to see answers from your documents here.'
-        : 'Ingest at least one document (Phase 1), then implement retrieval and generation.',
-    sources,
+      'Implement Phase 2 (retrieval) and Phase 3 (generation) to see answers from your documents here.',
+    sources: [],
   };
+}
+
+async function extractTextFromPDF(document: File): Promise<string[]> {
+  const arrayBuffer = await document.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  const parser = new PDFParse({ data: buffer });
+  const text = await parser.getText();
+  parser.destroy();
+  return text.pages.map((page) => page.text);
 }

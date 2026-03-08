@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -11,31 +11,114 @@ import { Textarea } from '@/components/ui/textarea';
 import { ingestDocument, queryRag } from '@/services/RAG/rag-actions';
 import { IngestResult, QueryResult } from '@/services/RAG/rag-types';
 import type { DemoProps } from './registry';
-import { PrivateUpload } from '@/payload-types';
+
+const ACCEPT_TYPES = '.txt,.md,.pdf';
+const TEXT_TYPES = ['text/plain', 'text/markdown', 'text/x-markdown'];
+
+function isTextFile(file: File): boolean {
+  const ext = file.name.split('.').pop()?.toLowerCase();
+  if (ext === 'txt' || ext === 'md') return true;
+  return TEXT_TYPES.includes(file.type);
+}
 
 export default function EnterpriseRagDemo({ slug, title }: DemoProps) {
   const [ingestText, setIngestText] = useState('');
   const [ingestTitle, setIngestTitle] = useState('');
-  const [sourceFile, setSourceFile] = useState<PrivateUpload | null>(null);
+  const [droppedFile, setDroppedFile] = useState<File | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isIngesting, setIsIngesting] = useState(false);
   const [question, setQuestion] = useState('');
   const [isQuerying, setIsQuerying] = useState(false);
   const [queryResult, setQueryResult] = useState<QueryResult | null>(null);
 
+  const processFile = useCallback(
+    (file: File) => {
+      if (isTextFile(file)) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const text = (reader.result as string) ?? '';
+          setIngestText(text);
+          if (!ingestTitle) {
+            const name = file.name.replace(/\.[^.]+$/, '');
+            setIngestTitle(name);
+          }
+          setDroppedFile(null);
+          toast.success(`Loaded "${file.name}"`);
+        };
+        reader.readAsText(file);
+        return;
+      }
+      if (file.type === 'application/pdf') {
+        setDroppedFile(file);
+        if (!ingestTitle) {
+          const name = file.name.replace(/\.pdf$/i, '');
+          setIngestTitle(name);
+        }
+        toast.info(
+          'PDF selected. Add PDF parsing in the ingestion pipeline to extract text.',
+        );
+        return;
+      }
+      toast.error('Use .txt, .md, or .pdf');
+    },
+    [ingestTitle],
+  );
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragOver(false);
+      const file = e.dataTransfer.files[0];
+      if (!file) return;
+      processFile(file);
+    },
+    [processFile],
+  );
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  }, []);
+
+  const handleFileInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      processFile(file);
+      e.target.value = '';
+    },
+    [processFile],
+  );
+
+  const clearDroppedFile = useCallback(() => {
+    setDroppedFile(null);
+  }, []);
+
+  const canIngest = ingestText.trim() || droppedFile;
+
   async function handleIngest() {
-    if (!ingestText.trim()) return;
+    if (!canIngest) return;
     setIsIngesting(true);
     try {
       const result: IngestResult = await ingestDocument(
-        ingestText,
+        ingestText.trim(),
         ingestTitle || undefined,
-        sourceFile || null,
+        droppedFile || null,
       );
       if (result.success) {
         toast.success(result.message);
         setIngestText('');
         setIngestTitle('');
+        setDroppedFile(null);
       } else {
         toast.error(result.message);
       }
@@ -85,6 +168,63 @@ export default function EnterpriseRagDemo({ slug, title }: DemoProps) {
               className="mt-1"
             />
           </div>
+
+          {/* File drop zone */}
+          <div>
+            <Label className="mb-1 block">Or drop a file</Label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={ACCEPT_TYPES}
+              onChange={handleFileInputChange}
+              className="hidden"
+              aria-hidden
+            />
+            <div
+              role="button"
+              tabIndex={0}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  fileInputRef.current?.click();
+                }
+              }}
+              onClick={() => fileInputRef.current?.click()}
+              className={`
+                border-2 border-dashed rounded-lg p-6 text-center cursor-pointer
+                transition-colors
+                ${
+                  isDragOver
+                    ? 'border-primary bg-primary/5'
+                    : 'border-border hover:border-muted-foreground/50 hover:bg-muted/30'
+                }
+              `}
+            >
+              <p className="text-muted-foreground text-sm">
+                Drag and drop .txt, .md, or .pdf here, or click to browse
+              </p>
+              {droppedFile && (
+                <p className="text-foreground mt-2 text-sm font-medium flex items-center justify-center gap-2">
+                  <span>{droppedFile.name}</span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearDroppedFile();
+                    }}
+                  >
+                    Clear
+                  </Button>
+                </p>
+              )}
+            </div>
+          </div>
+
           <div>
             <Label htmlFor="doc-text">Text</Label>
             <Textarea
@@ -96,10 +236,7 @@ export default function EnterpriseRagDemo({ slug, title }: DemoProps) {
               className="mt-1"
             />
           </div>
-          <Button
-            onClick={handleIngest}
-            disabled={isIngesting || !ingestText.trim()}
-          >
+          <Button onClick={handleIngest} disabled={isIngesting || !canIngest}>
             {isIngesting ? 'Ingesting…' : 'Ingest document'}
           </Button>
         </div>

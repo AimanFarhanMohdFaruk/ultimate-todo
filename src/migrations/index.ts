@@ -6,6 +6,7 @@ import * as migration_20260301_062336 from './20260301_062336';
 import * as migration_20260302_003149 from './20260302_003149';
 import * as migration_20260306_102216 from './20260306_102216';
 import * as migration_20260306_104143_add_rag_chunks from './20260306_104143_add_rag_chunks';
+import * as migration_20260307_102343 from './20260307_102343';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20260306_104143_add_rag_chunks.up,
     down: migration_20260306_104143_add_rag_chunks.down,
-    name: '20260306_104143_add_rag_chunks'
+    name: '20260306_104143_add_rag_chunks',
+  },
+  {
+    up: migration_20260307_102343.up,
+    down: migration_20260307_102343.down,
+    name: '20260307_102343'
   },
 ];
