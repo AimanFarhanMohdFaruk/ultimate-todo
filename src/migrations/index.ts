@@ -1,13 +1,13 @@
-import * as migration_20260301_050330 from './20260301_050330';
-import * as migration_20260301_050403 from './20260301_050403';
-import * as migration_20260301_051247 from './20260301_051247';
-import * as migration_20260301_062322 from './20260301_062322';
-import * as migration_20260301_062336 from './20260301_062336';
-import * as migration_20260302_003149 from './20260302_003149';
-import * as migration_20260306_102216 from './20260306_102216';
-import * as migration_20260306_104143_add_rag_chunks from './20260306_104143_add_rag_chunks';
-import * as migration_20260307_102343 from './20260307_102343';
-import * as migration_20260308_040751 from './20260308_040751';
+import * as migration_20260301_050330 from './20260301_050330'
+import * as migration_20260301_050403 from './20260301_050403'
+import * as migration_20260301_051247 from './20260301_051247'
+import * as migration_20260301_062322 from './20260301_062322'
+import * as migration_20260301_062336 from './20260301_062336'
+import * as migration_20260302_003149 from './20260302_003149'
+import * as migration_20260306_102216 from './20260306_102216'
+import * as migration_20260306_104143_add_rag_chunks from './20260306_104143_add_rag_chunks'
+import * as migration_20260307_102343 from './20260307_102343'
+import * as migration_20260308_040751 from './20260308_040751'
 
 export const migrations = [
   {
@@ -58,6 +58,6 @@ export const migrations = [
   {
     up: migration_20260308_040751.up,
     down: migration_20260308_040751.down,
-    name: '20260308_040751'
+    name: '20260308_040751',
   },
-];
+]

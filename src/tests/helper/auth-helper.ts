@@ -4,8 +4,9 @@
  * payload.auth({ headers }) and request-like usage.
  * Requires TEST_SERVER_URL (run tests via bun test:run or bun test:run:single so the dev server is started).
  */
-import type { User } from '@/payload-types'
+
 import { randomBytes } from 'node:crypto'
+import type { User } from '@/payload-types'
 
 /** Minimal type so the helper works with the real Payload + Better Auth instance. */
 type PayloadWithAuth = {
@@ -51,11 +52,7 @@ function copySessionCookiesToRequestHeaders(response: Response): Headers {
     if (cookieValue) requestHeaders.set('cookie', cookieValue)
   } else {
     const setCookie = response.headers.get('set-cookie')
-    if (setCookie)
-      requestHeaders.set(
-        'cookie',
-        setCookie.split(';')[0]?.trim() ?? setCookie,
-      )
+    if (setCookie) requestHeaders.set('cookie', setCookie.split(';')[0]?.trim() ?? setCookie)
   }
   return requestHeaders
 }
@@ -79,13 +76,13 @@ const TEST_SERVER_REQUIRED =
 
 async function authResultFromSignInResponse(
   payload: PayloadWithAuth,
-  signInResponse: Response,
+  signInResponse: Response
 ): Promise<AuthHelperResult> {
   const headers = copySessionCookiesToRequestHeaders(signInResponse)
   const sessionResult = await payload.betterAuth.api.getSession({ headers })
   if (!sessionResult?.user) {
     throw new Error(
-      'getSession after signIn returned no user; session cookies may not have been set',
+      'getSession after signIn returned no user; session cookies may not have been set'
     )
   }
   const user = await payload.findByID({
@@ -105,7 +102,7 @@ async function authResultFromSignInResponse(
  */
 export async function signUpAndGetHeaders(
   payload: PayloadWithAuth,
-  options: SignUpAndGetHeadersOptions,
+  options: SignUpAndGetHeadersOptions
 ): Promise<AuthHelperResult> {
   const baseUrl = getTestServerUrl()
   if (!baseUrl) throw new Error(TEST_SERVER_REQUIRED)
@@ -128,9 +125,7 @@ export async function signUpAndGetHeaders(
   }
   const userId = signUpBody?.user?.id
   if (!userId) {
-    throw new Error(
-      `signUp (server) returned no user: ${JSON.stringify(signUpBody)}`,
-    )
+    throw new Error(`signUp (server) returned no user: ${JSON.stringify(signUpBody)}`)
   }
 
   const updateData: Record<string, unknown> = {
@@ -166,7 +161,7 @@ const TEST_PASSWORD = 'test-password'
  */
 export async function asUser(
   payload: PayloadWithAuth,
-  role: 'admin' | 'user',
+  role: 'admin' | 'user'
 ): Promise<AuthHelperResult> {
   return signUpAndGetHeaders(payload, {
     email: uniqueEmail(),
@@ -184,7 +179,7 @@ export async function asUser(
 export async function loginAs(
   payload: PayloadWithAuth,
   email: string,
-  password: string,
+  password: string
 ): Promise<AuthHelperResult> {
   const baseUrl = getTestServerUrl()
   if (!baseUrl) throw new Error(TEST_SERVER_REQUIRED)

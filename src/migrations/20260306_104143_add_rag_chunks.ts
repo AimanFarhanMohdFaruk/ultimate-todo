@@ -1,4 +1,4 @@
-import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres';
+import { type MigrateDownArgs, type MigrateUpArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
@@ -23,19 +23,15 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
 
     CREATE INDEX "rag_chunks_document_id_idx"
       ON "rag_chunks" USING btree ("document_id");
-  `);
+  `)
 }
 
-export async function down({
-  db,
-  payload,
-  req,
-}: MigrateDownArgs): Promise<void> {
+export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
   await db.execute(sql`
     DROP INDEX IF EXISTS "rag_chunks_embedding_ivfflat_idx";
     DROP INDEX IF EXISTS "rag_chunks_document_id_idx";
     ALTER TABLE "rag_chunks"
       DROP CONSTRAINT IF EXISTS "rag_chunks_document_id_rag_docs_id_fk";
     DROP TABLE IF EXISTS "rag_chunks" CASCADE;
-  `);
+  `)
 }

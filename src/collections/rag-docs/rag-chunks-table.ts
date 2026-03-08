@@ -6,7 +6,7 @@ import {
   timestamp,
   uuid,
   vector,
-} from '@payloadcms/db-postgres/drizzle/pg-core';
+} from '@payloadcms/db-postgres/drizzle/pg-core'
 
 /**
  * Shared rag_chunks table definition for Drizzle.
@@ -20,4 +20,4 @@ export const ragChunksTable = pgTable('rag_chunks', {
   embedding: vector('embedding', { dimensions: 1024 }).notNull(),
   document_title: text('document_title'),
   created_at: timestamp('created_at').notNull().defaultNow(),
-});
+})

@@ -4,30 +4,30 @@
  */
 
 export type RagChunk = {
-  id: string;
-  text: string;
-  documentId: string;
-  documentTitle?: string;
-  chunkIndex: number;
+  id: string
+  text: string
+  documentId: string
+  documentTitle?: string
+  chunkIndex: number
   /** Embedding vector — add when you implement Phase 1 (embeddings API). */
-  embedding?: number[];
-};
+  embedding?: number[]
+}
 
 export type IngestResult = {
-  success: boolean;
-  message: string;
+  success: boolean
+  message: string
   /** Chunks created — set when you implement Phase 1. */
-  chunkCount?: number;
-};
+  chunkCount?: number
+}
 
 export type RagSource = {
-  documentId: string;
-  documentTitle?: string;
-  text: string;
-  chunkIndex?: number;
-};
+  documentId: string
+  documentTitle?: string
+  text: string
+  chunkIndex?: number
+}
 
 export type QueryResult = {
-  answer: string;
-  sources: RagSource[];
-};
+  answer: string
+  sources: RagSource[]
+}

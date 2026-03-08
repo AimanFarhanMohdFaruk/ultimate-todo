@@ -1,5 +1,4 @@
 import type { Block } from 'payload'
-
 import { defaultLexical } from '@/fields/default-lexical'
 
 export const FormBlock: Block = {

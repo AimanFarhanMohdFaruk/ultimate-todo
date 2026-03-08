@@ -70,12 +70,8 @@
           "name": "users_role_parent_fk",
           "tableFrom": "users_role",
           "tableTo": "users",
-          "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -436,12 +432,8 @@
           "name": "sessions_user_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -449,12 +441,8 @@
           "name": "sessions_impersonated_by_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "impersonated_by_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["impersonated_by_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -648,12 +636,8 @@
           "name": "accounts_user_id_users_id_fk",
           "tableFrom": "accounts",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -910,12 +894,8 @@
           "name": "passkeys_user_id_users_id_fk",
           "tableFrom": "passkeys",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1086,12 +1066,8 @@
           "name": "blog_populated_authors_parent_id_fk",
           "tableFrom": "blog_populated_authors",
           "tableTo": "blog",
-          "columnsFrom": [
-            "_parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["_parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1296,12 +1272,8 @@
           "name": "blog_meta_image_id_payload_uploads_id_fk",
           "tableFrom": "blog",
           "tableTo": "payload_uploads",
-          "columnsFrom": [
-            "meta_image_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["meta_image_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1414,12 +1386,8 @@
           "name": "blog_rels_parent_fk",
           "tableFrom": "blog_rels",
           "tableTo": "blog",
-          "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1427,12 +1395,8 @@
           "name": "blog_rels_users_fk",
           "tableFrom": "blog_rels",
           "tableTo": "users",
-          "columnsFrom": [
-            "users_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["users_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1516,12 +1480,8 @@
           "name": "_blog_v_version_populated_authors_parent_id_fk",
           "tableFrom": "_blog_v_version_populated_authors",
           "tableTo": "_blog_v",
-          "columnsFrom": [
-            "_parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["_parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1831,12 +1791,8 @@
           "name": "_blog_v_parent_id_blog_id_fk",
           "tableFrom": "_blog_v",
           "tableTo": "blog",
-          "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1844,12 +1800,8 @@
           "name": "_blog_v_version_meta_image_id_payload_uploads_id_fk",
           "tableFrom": "_blog_v",
           "tableTo": "payload_uploads",
-          "columnsFrom": [
-            "version_meta_image_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["version_meta_image_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1962,12 +1914,8 @@
           "name": "_blog_v_rels_parent_fk",
           "tableFrom": "_blog_v_rels",
           "tableTo": "_blog_v",
-          "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1975,12 +1923,8 @@
           "name": "_blog_v_rels_users_fk",
           "tableFrom": "_blog_v_rels",
           "tableTo": "users",
-          "columnsFrom": [
-            "users_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["users_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2424,12 +2368,8 @@
           "name": "payload_uploads_folder_id_payload_folders_id_fk",
           "tableFrom": "payload_uploads",
           "tableTo": "payload_folders",
-          "columnsFrom": [
-            "folder_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["folder_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2606,12 +2546,8 @@
           "name": "private_uploads_folder_id_payload_folders_id_fk",
           "tableFrom": "private_uploads",
           "tableTo": "payload_folders",
-          "columnsFrom": [
-            "folder_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["folder_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2724,12 +2660,8 @@
           "name": "private_uploads_rels_parent_fk",
           "tableFrom": "private_uploads_rels",
           "tableTo": "private_uploads",
-          "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2737,12 +2669,8 @@
           "name": "private_uploads_rels_users_fk",
           "tableFrom": "private_uploads_rels",
           "tableTo": "users",
-          "columnsFrom": [
-            "users_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["users_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2876,12 +2804,8 @@
           "name": "todo_user_id_users_id_fk",
           "tableFrom": "todo",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3050,12 +2974,8 @@
           "name": "payload_jobs_log_parent_id_fk",
           "tableFrom": "payload_jobs_log",
           "tableTo": "payload_jobs",
-          "columnsFrom": [
-            "_parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["_parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3363,12 +3283,8 @@
           "name": "payload_folders_folder_type_parent_fk",
           "tableFrom": "payload_folders_folder_type",
           "tableTo": "payload_folders",
-          "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3484,12 +3400,8 @@
           "name": "payload_folders_folder_id_payload_folders_id_fk",
           "tableFrom": "payload_folders",
           "tableTo": "payload_folders",
-          "columnsFrom": [
-            "folder_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["folder_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3898,12 +3810,8 @@
           "name": "payload_locked_documents_rels_parent_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "payload_locked_documents",
-          "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3911,12 +3819,8 @@
           "name": "payload_locked_documents_rels_users_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "users",
-          "columnsFrom": [
-            "users_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["users_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3924,12 +3828,8 @@
           "name": "payload_locked_documents_rels_sessions_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "sessions",
-          "columnsFrom": [
-            "sessions_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sessions_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3937,12 +3837,8 @@
           "name": "payload_locked_documents_rels_accounts_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "accounts",
-          "columnsFrom": [
-            "accounts_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["accounts_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3950,12 +3846,8 @@
           "name": "payload_locked_documents_rels_verifications_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "verifications",
-          "columnsFrom": [
-            "verifications_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["verifications_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3963,12 +3855,8 @@
           "name": "payload_locked_documents_rels_passkeys_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "passkeys",
-          "columnsFrom": [
-            "passkeys_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["passkeys_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3976,12 +3864,8 @@
           "name": "payload_locked_documents_rels_admin_invitations_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "admin_invitations",
-          "columnsFrom": [
-            "admin_invitations_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["admin_invitations_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3989,12 +3873,8 @@
           "name": "payload_locked_documents_rels_blog_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "blog",
-          "columnsFrom": [
-            "blog_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["blog_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4002,12 +3882,8 @@
           "name": "payload_locked_documents_rels_payload_uploads_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "payload_uploads",
-          "columnsFrom": [
-            "payload_uploads_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["payload_uploads_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4015,12 +3891,8 @@
           "name": "payload_locked_documents_rels_private_uploads_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "private_uploads",
-          "columnsFrom": [
-            "private_uploads_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["private_uploads_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4028,12 +3900,8 @@
           "name": "payload_locked_documents_rels_todo_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "todo",
-          "columnsFrom": [
-            "todo_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["todo_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4041,12 +3909,8 @@
           "name": "payload_locked_documents_rels_payload_folders_fk",
           "tableFrom": "payload_locked_documents_rels",
           "tableTo": "payload_folders",
-          "columnsFrom": [
-            "payload_folders_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["payload_folders_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4251,12 +4115,8 @@
           "name": "payload_preferences_rels_parent_fk",
           "tableFrom": "payload_preferences_rels",
           "tableTo": "payload_preferences",
-          "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4264,12 +4124,8 @@
           "name": "payload_preferences_rels_users_fk",
           "tableFrom": "payload_preferences_rels",
           "tableTo": "users",
-          "columnsFrom": [
-            "users_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["users_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4444,12 +4300,8 @@
           "name": "global_footer_nav_items_parent_id_fk",
           "tableFrom": "global_footer_nav_items",
           "tableTo": "global_footer",
-          "columnsFrom": [
-            "_parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["_parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4600,12 +4452,8 @@
           "name": "global_footer_rels_parent_fk",
           "tableFrom": "global_footer_rels",
           "tableTo": "global_footer",
-          "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["parent_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4613,12 +4461,8 @@
           "name": "global_footer_rels_blog_fk",
           "tableFrom": "global_footer_rels",
           "tableTo": "blog",
-          "columnsFrom": [
-            "blog_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["blog_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4710,98 +4554,57 @@
     "public.enum_users_role": {
       "name": "enum_users_role",
       "schema": "public",
-      "values": [
-        "admin",
-        "user"
-      ]
+      "values": ["admin", "user"]
     },
     "public.enum_admin_invitations_role": {
       "name": "enum_admin_invitations_role",
       "schema": "public",
-      "values": [
-        "admin",
-        "user"
-      ]
+      "values": ["admin", "user"]
     },
     "public.enum_blog_category": {
       "name": "enum_blog_category",
       "schema": "public",
-      "values": [
-        "company",
-        "marketing",
-        "newsroom",
-        "partners",
-        "engineering",
-        "press"
-      ]
+      "values": ["company", "marketing", "newsroom", "partners", "engineering", "press"]
     },
     "public.enum_blog_status": {
       "name": "enum_blog_status",
       "schema": "public",
-      "values": [
-        "draft",
-        "published"
-      ]
+      "values": ["draft", "published"]
     },
     "public.enum__blog_v_version_category": {
       "name": "enum__blog_v_version_category",
       "schema": "public",
-      "values": [
-        "company",
-        "marketing",
-        "newsroom",
-        "partners",
-        "engineering",
-        "press"
-      ]
+      "values": ["company", "marketing", "newsroom", "partners", "engineering", "press"]
     },
     "public.enum__blog_v_version_status": {
       "name": "enum__blog_v_version_status",
       "schema": "public",
-      "values": [
-        "draft",
-        "published"
-      ]
+      "values": ["draft", "published"]
     },
     "public.enum_payload_jobs_log_task_slug": {
       "name": "enum_payload_jobs_log_task_slug",
       "schema": "public",
-      "values": [
-        "inline",
-        "schedulePublish"
-      ]
+      "values": ["inline", "schedulePublish"]
     },
     "public.enum_payload_jobs_log_state": {
       "name": "enum_payload_jobs_log_state",
       "schema": "public",
-      "values": [
-        "failed",
-        "succeeded"
-      ]
+      "values": ["failed", "succeeded"]
     },
     "public.enum_payload_jobs_task_slug": {
       "name": "enum_payload_jobs_task_slug",
       "schema": "public",
-      "values": [
-        "inline",
-        "schedulePublish"
-      ]
+      "values": ["inline", "schedulePublish"]
     },
     "public.enum_payload_folders_folder_type": {
       "name": "enum_payload_folders_folder_type",
       "schema": "public",
-      "values": [
-        "payload-uploads",
-        "private-uploads"
-      ]
+      "values": ["payload-uploads", "private-uploads"]
     },
     "public.enum_global_footer_nav_items_link_type": {
       "name": "enum_global_footer_nav_items_link_type",
       "schema": "public",
-      "values": [
-        "custom",
-        "reference"
-      ]
+      "values": ["custom", "reference"]
     }
   },
   "schemas": {},

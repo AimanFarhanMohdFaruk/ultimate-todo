@@ -1,23 +1,23 @@
-'use server';
+'use server'
 
-import { getPayload } from '@/lib/payload/get-payload';
-import { currentUser } from '@/lib/auth/context/get-context-props';
+import { currentUser } from '@/lib/auth/context/get-context-props'
+import { getPayload } from '@/lib/payload/get-payload'
 
 export async function checkTasksDue() {
-  const payload = await getPayload();
-  const user = await currentUser();
+  const payload = await getPayload()
+  const user = await currentUser()
 
   if (!user) {
-    throw new Error('User not found');
+    throw new Error('User not found')
   }
 
   // Queue the job
   await payload.jobs.queue({
     task: 'checkTasksDue',
     input: {},
-  });
+  })
 
-  await payload.jobs.run();
+  await payload.jobs.run()
   const jobs = await payload.find({
     collection: 'payload-jobs',
     where: {
@@ -26,11 +26,11 @@ export async function checkTasksDue() {
     },
     sort: '-completedAt',
     limit: 1,
-  });
+  })
 
-  const latestJob = jobs.docs[0];
+  const latestJob = jobs.docs[0]
 
-  const now = new Date().toISOString();
+  const now = new Date().toISOString()
   const result = await payload.find({
     collection: 'todo',
     where: {
@@ -38,25 +38,25 @@ export async function checkTasksDue() {
       completed: { equals: false },
     },
     limit: 100,
-  });
+  })
 
   return {
     dueCount: result.totalDocs,
     dueTitles: result.docs.map((doc) => doc.title as string),
     completedAt: latestJob?.completedAt,
-  };
+  }
 }
 
 export async function seedSampleTodos() {
-  const payload = await getPayload();
-  const user = await currentUser();
+  const payload = await getPayload()
+  const user = await currentUser()
   if (!user) {
-    throw new Error('User not found');
+    throw new Error('User not found')
   }
 
-  const now = new Date();
-  const pastDue = new Date(now.getTime() - 1000 * 60 * 60 * 24); // 1 day ago
-  const futureDue = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7); // 1 week from now
+  const now = new Date()
+  const pastDue = new Date(now.getTime() - 1000 * 60 * 60 * 24) // 1 day ago
+  const futureDue = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7) // 1 week from now
 
   const samples = [
     {
@@ -94,11 +94,11 @@ export async function seedSampleTodos() {
       completed: true,
       user: user.id,
     },
-  ];
+  ]
 
   for (const todo of samples) {
-    await payload.create({ collection: 'todo', data: todo });
+    await payload.create({ collection: 'todo', data: todo })
   }
 
-  return { created: samples.length };
+  return { created: samples.length }
 }

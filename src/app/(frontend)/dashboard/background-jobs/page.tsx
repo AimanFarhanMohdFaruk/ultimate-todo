@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
   ArrowLeftIcon,
@@ -8,56 +8,54 @@ import {
   PlayIcon,
   PlusIcon,
   SettingsIcon,
-} from 'lucide-react';
-import Link from 'next/link';
-import { useState } from 'react';
-import { toast } from 'sonner';
+} from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
 
-import { Main } from '@/components/layout/main';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Main } from '@/components/layout/main'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 
-import { checkTasksDue, seedSampleTodos } from './actions';
+import { toast } from 'sonner'
+import { checkTasksDue, seedSampleTodos } from './actions'
 
-type JobState = 'idle' | 'queued' | 'running' | 'completed' | 'error';
+type JobState = 'idle' | 'queued' | 'running' | 'completed' | 'error'
 
 type JobRun = {
-  id: string;
-  state: JobState;
-  dueCount?: number;
-  dueTitles?: string[];
-  completedAt?: string | null;
-  error?: string;
-};
+  id: string
+  state: JobState
+  dueCount?: number
+  dueTitles?: string[]
+  completedAt?: string | null
+  error?: string
+}
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export default function BackgroundJobsPage() {
-  const [jobRuns, setJobRuns] = useState<JobRun[]>([]);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isSeeding, setIsSeeding] = useState(false);
+  const [jobRuns, setJobRuns] = useState<JobRun[]>([])
+  const [isRunning, setIsRunning] = useState(false)
+  const [isSeeding, setIsSeeding] = useState(false)
 
   const runJob = async () => {
-    const runId = crypto.randomUUID();
+    const runId = crypto.randomUUID()
 
     // Add to job runs as queued
-    setJobRuns((prev) => [{ id: runId, state: 'queued' }, ...prev]);
-    setIsRunning(true);
-    toast.info('Job queued — checking for due tasks...');
+    setJobRuns((prev) => [{ id: runId, state: 'queued' }, ...prev])
+    setIsRunning(true)
+    toast.info('Job queued — checking for due tasks...')
 
     try {
       // Keep the "queued" state visible for a short time
-      await sleep(800);
+      await sleep(800)
 
       // Move to running
-      setJobRuns((prev) =>
-        prev.map((r) => (r.id === runId ? { ...r, state: 'running' } : r)),
-      );
+      setJobRuns((prev) => prev.map((r) => (r.id === runId ? { ...r, state: 'running' } : r)))
 
-      const result = await checkTasksDue();
+      const result = await checkTasksDue()
 
       // Keep the "running" state visible for a short time
-      await sleep(800);
+      await sleep(800)
 
       setJobRuns((prev) =>
         prev.map((r) =>
@@ -69,23 +67,20 @@ export default function BackgroundJobsPage() {
                 dueTitles: result.dueTitles,
                 completedAt: result.completedAt,
               }
-            : r,
-        ),
-      );
+            : r
+        )
+      )
 
       if (result.dueCount > 0) {
-        toast.warning(
-          `${result.dueCount} todo${result.dueCount === 1 ? '' : 's'} overdue`,
-          {
-            description: result.dueTitles.slice(0, 3).join(', '),
-          },
-        );
+        toast.warning(`${result.dueCount} todo${result.dueCount === 1 ? '' : 's'} overdue`, {
+          description: result.dueTitles.slice(0, 3).join(', '),
+        })
       } else {
-        toast.success("No overdue todos — you're all caught up!");
+        toast.success("No overdue todos — you're all caught up!")
       }
     } catch (err) {
       // Brief pause so the failure transition is visible
-      await sleep(400);
+      await sleep(400)
 
       setJobRuns((prev) =>
         prev.map((r) =>
@@ -95,30 +90,30 @@ export default function BackgroundJobsPage() {
                 state: 'error',
                 error: err instanceof Error ? err.message : 'Unknown error',
               }
-            : r,
-        ),
-      );
+            : r
+        )
+      )
       toast.error('Job failed', {
         description: err instanceof Error ? err.message : 'Unknown error',
-      });
+      })
     } finally {
-      setIsRunning(false);
+      setIsRunning(false)
     }
-  };
+  }
 
   const handleSeed = async () => {
-    setIsSeeding(true);
+    setIsSeeding(true)
     try {
-      const result = await seedSampleTodos();
-      toast.success(`Created ${result.created} sample todos`);
+      const result = await seedSampleTodos()
+      toast.success(`Created ${result.created} sample todos`)
     } catch (err) {
       toast.error('Failed to seed todos', {
         description: err instanceof Error ? err.message : 'Unknown error',
-      });
+      })
     } finally {
-      setIsSeeding(false);
+      setIsSeeding(false)
     }
-  };
+  }
 
   return (
     <Main>
@@ -141,9 +136,7 @@ export default function BackgroundJobsPage() {
               <SettingsIcon className="size-5" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">
-                Background Jobs
-              </h1>
+              <h1 className="text-2xl font-bold tracking-tight">Background Jobs</h1>
               <p className="text-sm text-muted-foreground">
                 Payload CMS job queue — queue, execute, and observe
               </p>
@@ -160,21 +153,13 @@ export default function BackgroundJobsPage() {
             <li className="flex gap-2">
               <span className="font-mono text-primary">1.</span>
               Click the button to queue a{' '}
-              <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                checkTasksDue
-              </code>{' '}
-              job
+              <code className="rounded bg-muted px-1.5 py-0.5 text-xs">checkTasksDue</code> job
             </li>
             <li className="flex gap-2">
               <span className="font-mono text-primary">2.</span>
               Payload runs the job — queries todos where{' '}
-              <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                dueAt ≤ now
-              </code>{' '}
-              and{' '}
-              <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                completed = false
-              </code>
+              <code className="rounded bg-muted px-1.5 py-0.5 text-xs">dueAt ≤ now</code> and{' '}
+              <code className="rounded bg-muted px-1.5 py-0.5 text-xs">completed = false</code>
             </li>
             <li className="flex gap-2">
               <span className="font-mono text-primary">3.</span>
@@ -239,9 +224,7 @@ export default function BackgroundJobsPage() {
                     {run.state === 'completed' && (
                       <CheckCircle2Icon className="size-5 text-green-500" />
                     )}
-                    {run.state === 'error' && (
-                      <span className="size-5 text-destructive">!</span>
-                    )}
+                    {run.state === 'error' && <span className="size-5 text-destructive">!</span>}
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -256,9 +239,7 @@ export default function BackgroundJobsPage() {
                       </p>
                     )}
                     {run.state === 'error' && (
-                      <p className="mt-1 text-sm text-destructive">
-                        {run.error}
-                      </p>
+                      <p className="mt-1 text-sm text-destructive">{run.error}</p>
                     )}
                     <p className="mt-1 font-mono text-xs text-muted-foreground/60">
                       {run.id.slice(0, 8)}
@@ -271,20 +252,20 @@ export default function BackgroundJobsPage() {
         </div>
       </div>
     </Main>
-  );
+  )
 }
 
 function JobStateBadge({ state }: { state: JobState }) {
   switch (state) {
     case 'queued':
-      return <Badge variant="outline">Queued</Badge>;
+      return <Badge variant="outline">Queued</Badge>
     case 'running':
-      return <Badge variant="secondary">Running</Badge>;
+      return <Badge variant="secondary">Running</Badge>
     case 'completed':
-      return <Badge variant="default">Completed</Badge>;
+      return <Badge variant="default">Completed</Badge>
     case 'error':
-      return <Badge variant="destructive">Failed</Badge>;
+      return <Badge variant="destructive">Failed</Badge>
     default:
-      return null;
+      return null
   }
 }

@@ -1,23 +1,23 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { postgresAdapter } from '@payloadcms/db-postgres';
-import { buildConfig } from 'payload';
-import sharp from 'sharp';
-import { Blog } from './collections/blog';
-import { GlobalFooter, GlobalPrivacy, GlobalTerms } from './collections/global';
-import { PayloadUploads } from './collections/uploads/payload-uploads';
-import { PrivateUploads } from './collections/uploads/private-uploads';
-import { Users } from './collections/users';
-import { defaultLexical } from './fields/default-lexical';
-import { getEmailAdapter } from './lib/email-adapter';
-import { getServerSideURL } from './lib/payload';
-import { plugins } from './plugins';
-import { Todo } from './collections/todo';
-import { RagDocs } from './collections/rag-docs';
-import { ragChunksTable } from './collections/rag-docs/rag-chunks-table';
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { postgresAdapter } from '@payloadcms/db-postgres'
+import { buildConfig } from 'payload'
+import sharp from 'sharp'
+import { Blog } from './collections/blog'
+import { GlobalFooter, GlobalPrivacy, GlobalTerms } from './collections/global'
+import { RagDocs } from './collections/rag-docs'
+import { ragChunksTable } from './collections/rag-docs/rag-chunks-table'
+import { Todo } from './collections/todo'
+import { PayloadUploads } from './collections/uploads/payload-uploads'
+import { PrivateUploads } from './collections/uploads/private-uploads'
+import { Users } from './collections/users'
+import { defaultLexical } from './fields/default-lexical'
+import { getEmailAdapter } from './lib/email-adapter'
+import { getServerSideURL } from './lib/payload'
+import { plugins } from './plugins'
 
-const filename = fileURLToPath(import.meta.url);
-const dirname = path.dirname(filename);
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
@@ -79,7 +79,7 @@ export default buildConfig({
             ...schema.tables,
             rag_chunks: ragChunksTable,
           },
-        };
+        }
       },
     ],
   }),
@@ -97,7 +97,7 @@ export default buildConfig({
           { name: 'dueTitles', type: 'json' },
         ],
         handler: async ({ req }) => {
-          const now = new Date().toISOString();
+          const now = new Date().toISOString()
           const result = await req.payload.find({
             collection: 'todo',
             where: {
@@ -105,15 +105,15 @@ export default buildConfig({
               completed: { equals: false },
             },
             limit: 100,
-          });
+          })
           return {
             output: {
               dueCount: result.totalDocs,
               dueTitles: result.docs.map((doc) => doc.title as string),
             },
-          };
+          }
         },
       },
     ],
   },
-});
+})

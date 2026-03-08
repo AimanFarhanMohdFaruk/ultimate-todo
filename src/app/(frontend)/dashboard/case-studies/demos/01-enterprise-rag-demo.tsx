@@ -1,152 +1,144 @@
-'use client';
+'use client'
 
-import { useCallback, useRef, useState } from 'react';
-import { toast } from 'sonner';
+import { useCallback, useRef, useState } from 'react'
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 
-import {
-  ingestDocument,
-  queryRag,
-} from '@/collections/rag-docs/services/RAG/rag-actions';
-import {
-  IngestResult,
-  QueryResult,
-} from '@/collections/rag-docs/services/RAG/rag-types';
-import type { DemoProps } from './registry';
+import { toast } from 'sonner'
+import { ingestDocument, queryRag } from '@/collections/rag-docs/services/RAG/rag-actions'
+import type { IngestResult, QueryResult } from '@/collections/rag-docs/services/RAG/rag-types'
+import type { DemoProps } from './registry'
 
-const ACCEPT_TYPES = '.txt,.md,.pdf';
-const TEXT_TYPES = ['text/plain', 'text/markdown', 'text/x-markdown'];
+const ACCEPT_TYPES = '.txt,.md,.pdf'
+const TEXT_TYPES = ['text/plain', 'text/markdown', 'text/x-markdown']
 
 function isTextFile(file: File): boolean {
-  const ext = file.name.split('.').pop()?.toLowerCase();
-  if (ext === 'txt' || ext === 'md') return true;
-  return TEXT_TYPES.includes(file.type);
+  const ext = file.name.split('.').pop()?.toLowerCase()
+  if (ext === 'txt' || ext === 'md') return true
+  return TEXT_TYPES.includes(file.type)
 }
 
 export default function EnterpriseRagDemo({ slug, title }: DemoProps) {
-  const [ingestText, setIngestText] = useState('');
-  const [ingestTitle, setIngestTitle] = useState('');
-  const [droppedFile, setDroppedFile] = useState<File | null>(null);
-  const [isDragOver, setIsDragOver] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [ingestText, setIngestText] = useState('')
+  const [ingestTitle, setIngestTitle] = useState('')
+  const [droppedFile, setDroppedFile] = useState<File | null>(null)
+  const [isDragOver, setIsDragOver] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [isIngesting, setIsIngesting] = useState(false);
-  const [question, setQuestion] = useState('');
-  const [isQuerying, setIsQuerying] = useState(false);
-  const [queryResult, setQueryResult] = useState<QueryResult | null>(null);
+  const [isIngesting, setIsIngesting] = useState(false)
+  const [question, setQuestion] = useState('')
+  const [isQuerying, setIsQuerying] = useState(false)
+  const [queryResult, setQueryResult] = useState<QueryResult | null>(null)
 
   const processFile = useCallback(
     (file: File) => {
       if (isTextFile(file)) {
-        const reader = new FileReader();
+        const reader = new FileReader()
         reader.onload = () => {
-          const text = (reader.result as string) ?? '';
-          setIngestText(text);
+          const text = (reader.result as string) ?? ''
+          setIngestText(text)
           if (!ingestTitle) {
-            const name = file.name.replace(/\.[^.]+$/, '');
-            setIngestTitle(name);
+            const name = file.name.replace(/\.[^.]+$/, '')
+            setIngestTitle(name)
           }
-          setDroppedFile(null);
-          toast.success(`Loaded "${file.name}"`);
-        };
-        reader.readAsText(file);
-        return;
+          setDroppedFile(null)
+          toast.success(`Loaded "${file.name}"`)
+        }
+        reader.readAsText(file)
+        return
       }
       if (file.type === 'application/pdf') {
-        setDroppedFile(file);
+        setDroppedFile(file)
         if (!ingestTitle) {
-          const name = file.name.replace(/\.pdf$/i, '');
-          setIngestTitle(name);
+          const name = file.name.replace(/\.pdf$/i, '')
+          setIngestTitle(name)
         }
-        toast.info(
-          'PDF selected. Add PDF parsing in the ingestion pipeline to extract text.',
-        );
-        return;
+        toast.info('PDF selected. Add PDF parsing in the ingestion pipeline to extract text.')
+        return
       }
-      toast.error('Use .txt, .md, or .pdf');
+      toast.error('Use .txt, .md, or .pdf')
     },
-    [ingestTitle],
-  );
+    [ingestTitle]
+  )
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragOver(false);
-      const file = e.dataTransfer.files[0];
-      if (!file) return;
-      processFile(file);
+      e.preventDefault()
+      setIsDragOver(false)
+      const file = e.dataTransfer.files[0]
+      if (!file) return
+      processFile(file)
     },
-    [processFile],
-  );
+    [processFile]
+  )
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(true);
-  }, []);
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragOver(true)
+  }, [])
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragOver(false);
-  }, []);
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragOver(false)
+  }, [])
 
   const handleFileInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      processFile(file);
-      e.target.value = '';
+      const file = e.target.files?.[0]
+      if (!file) return
+      processFile(file)
+      e.target.value = ''
     },
-    [processFile],
-  );
+    [processFile]
+  )
 
   const clearDroppedFile = useCallback(() => {
-    setDroppedFile(null);
-  }, []);
+    setDroppedFile(null)
+  }, [])
 
-  const canIngest = ingestText.trim() || droppedFile;
+  const canIngest = ingestText.trim() || droppedFile
 
   async function handleIngest() {
-    if (!canIngest) return;
-    setIsIngesting(true);
+    if (!canIngest) return
+    setIsIngesting(true)
     try {
       const result: IngestResult = await ingestDocument(
         ingestText.trim(),
         ingestTitle,
-        droppedFile || null,
-      );
+        droppedFile || null
+      )
       if (result.success) {
-        toast.success(result.message);
-        setIngestText('');
-        setIngestTitle('');
-        setDroppedFile(null);
+        toast.success(result.message)
+        setIngestText('')
+        setIngestTitle('')
+        setDroppedFile(null)
       } else {
-        toast.error(result.message);
+        toast.error(result.message)
       }
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Ingest failed');
+      toast.error(e instanceof Error ? e.message : 'Ingest failed')
     } finally {
-      setIsIngesting(false);
+      setIsIngesting(false)
     }
   }
 
   async function handleQuery() {
-    if (!question.trim()) return;
-    setIsQuerying(true);
-    setQueryResult(null);
+    if (!question.trim()) return
+    setIsQuerying(true)
+    setQueryResult(null)
     try {
-      const result = await queryRag(question);
-      setQueryResult(result);
-      toast.success('Query completed');
+      const result = await queryRag(question)
+      setQueryResult(result)
+      toast.success('Query completed')
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Query failed');
+      toast.error(e instanceof Error ? e.message : 'Query failed')
     } finally {
-      setIsQuerying(false);
+      setIsQuerying(false)
     }
   }
 
@@ -160,8 +152,7 @@ export default function EnterpriseRagDemo({ slug, title }: DemoProps) {
           Add document (Phase 1: ingestion)
         </h3>
         <p className="text-muted-foreground mb-4 text-sm">
-          Paste text to ingest. Implement chunking, embeddings, and storage in
-          the server actions.
+          Paste text to ingest. Implement chunking, embeddings, and storage in the server actions.
         </p>
         <div className="space-y-3">
           <div>
@@ -194,8 +185,8 @@ export default function EnterpriseRagDemo({ slug, title }: DemoProps) {
               onDrop={handleDrop}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  fileInputRef.current?.click();
+                  e.preventDefault()
+                  fileInputRef.current?.click()
                 }
               }}
               onClick={() => fileInputRef.current?.click()}
@@ -220,8 +211,8 @@ export default function EnterpriseRagDemo({ slug, title }: DemoProps) {
                     variant="ghost"
                     size="sm"
                     onClick={(e) => {
-                      e.stopPropagation();
-                      clearDroppedFile();
+                      e.stopPropagation()
+                      clearDroppedFile()
                     }}
                   >
                     Clear
@@ -254,8 +245,8 @@ export default function EnterpriseRagDemo({ slug, title }: DemoProps) {
           Ask a question (Phase 2: retrieval, Phase 3: generation)
         </h3>
         <p className="text-muted-foreground mb-4 text-sm">
-          Implement query embedding, vector search, context building, and LLM
-          call in the server actions.
+          Implement query embedding, vector search, context building, and LLM call in the server
+          actions.
         </p>
         <div className="flex gap-2">
           <Input
@@ -265,10 +256,7 @@ export default function EnterpriseRagDemo({ slug, title }: DemoProps) {
             onKeyDown={(e) => e.key === 'Enter' && handleQuery()}
             className="flex-1"
           />
-          <Button
-            onClick={handleQuery}
-            disabled={isQuerying || !question.trim()}
-          >
+          <Button onClick={handleQuery} disabled={isQuerying || !question.trim()}>
             {isQuerying ? 'Asking…' : 'Ask'}
           </Button>
         </div>
@@ -298,13 +286,9 @@ export default function EnterpriseRagDemo({ slug, title }: DemoProps) {
                   >
                     <span className="font-medium">
                       {src.documentTitle ?? src.documentId}
-                      {src.chunkIndex != null
-                        ? ` (chunk ${src.chunkIndex})`
-                        : ''}
+                      {src.chunkIndex != null ? ` (chunk ${src.chunkIndex})` : ''}
                     </span>
-                    <p className="text-muted-foreground mt-1 line-clamp-2">
-                      {src.text}
-                    </p>
+                    <p className="text-muted-foreground mt-1 line-clamp-2">{src.text}</p>
                   </li>
                 ))}
               </ul>
@@ -313,5 +297,5 @@ export default function EnterpriseRagDemo({ slug, title }: DemoProps) {
         </section>
       )}
     </div>
-  );
+  )
 }

@@ -1,12 +1,12 @@
 const GITHUB_BASE =
-  'https://github.com/ombharatiya/ai-system-design-guide/blob/main/16-case-studies';
+  'https://github.com/ombharatiya/ai-system-design-guide/blob/main/16-case-studies'
 
 export type CaseStudyEntry = {
-  slug: string;
-  title: string;
-  description: string;
-  sourceUrl: string;
-};
+  slug: string
+  title: string
+  description: string
+  sourceUrl: string
+}
 
 export const CASE_STUDIES: CaseStudyEntry[] = [
   {
@@ -26,15 +26,13 @@ export const CASE_STUDIES: CaseStudyEntry[] = [
   {
     slug: '03-financial-analysis',
     title: 'Financial Analysis',
-    description:
-      'AI system for financial document analysis, compliance, and reporting.',
+    description: 'AI system for financial document analysis, compliance, and reporting.',
     sourceUrl: `${GITHUB_BASE}/03-financial-analysis.md`,
   },
   {
     slug: '04-code-assistant',
     title: 'Code Assistant',
-    description:
-      'In-IDE or API code assistant: context gathering, generation, and tool use.',
+    description: 'In-IDE or API code assistant: context gathering, generation, and tool use.',
     sourceUrl: `${GITHUB_BASE}/04-code-assistant.md`,
   },
   {
@@ -47,15 +45,13 @@ export const CASE_STUDIES: CaseStudyEntry[] = [
   {
     slug: '06-real-time-search',
     title: 'Real-Time Search',
-    description:
-      'Low-latency semantic and keyword search with live indexing.',
+    description: 'Low-latency semantic and keyword search with live indexing.',
     sourceUrl: `${GITHUB_BASE}/06-real-time-search.md`,
   },
   {
     slug: '07-autonomous-coding-agent',
     title: 'Autonomous Coding Agent',
-    description:
-      'Agent that plans, executes, and iterates on code tasks with tools and feedback.',
+    description: 'Agent that plans, executes, and iterates on code tasks with tools and feedback.',
     sourceUrl: `${GITHUB_BASE}/07-autonomous-coding-agent.md`,
   },
   {
@@ -68,29 +64,25 @@ export const CASE_STUDIES: CaseStudyEntry[] = [
   {
     slug: '09-customer-support-automation',
     title: 'Customer Support Automation',
-    description:
-      'End-to-end support automation: triage, knowledge retrieval, and human handoff.',
+    description: 'End-to-end support automation: triage, knowledge retrieval, and human handoff.',
     sourceUrl: `${GITHUB_BASE}/09-customer-support-automation.md`,
   },
   {
     slug: '10-document-intelligence',
     title: 'Document Intelligence',
-    description:
-      'Extract, classify, and reason over documents (contracts, forms, reports).',
+    description: 'Extract, classify, and reason over documents (contracts, forms, reports).',
     sourceUrl: `${GITHUB_BASE}/10-document-intelligence.md`,
   },
   {
     slug: '11-recommendation-engine',
     title: 'Recommendation Engine',
-    description:
-      'Personalized recommendations: ranking, diversity, and real-time signals.',
+    description: 'Personalized recommendations: ranking, diversity, and real-time signals.',
     sourceUrl: `${GITHUB_BASE}/11-recommendation-engine.md`,
   },
   {
     slug: '12-compliance-automation',
     title: 'Compliance Automation',
-    description:
-      'Automate policy checks, evidence collection, and audit trails for compliance.',
+    description: 'Automate policy checks, evidence collection, and audit trails for compliance.',
     sourceUrl: `${GITHUB_BASE}/12-compliance-automation.md`,
   },
   {
@@ -103,8 +95,7 @@ export const CASE_STUDIES: CaseStudyEntry[] = [
   {
     slug: '14-fraud-detection',
     title: 'Fraud Detection',
-    description:
-      'Real-time and batch fraud detection: features, models, and human review loops.',
+    description: 'Real-time and batch fraud detection: features, models, and human review loops.',
     sourceUrl: `${GITHUB_BASE}/14-fraud-detection.md`,
   },
   {
@@ -114,19 +105,20 @@ export const CASE_STUDIES: CaseStudyEntry[] = [
       'Internal knowledge base: ingestion, search, and answer synthesis with access control.',
     sourceUrl: `${GITHUB_BASE}/15-knowledge-management.md`,
   },
-];
+]
 
 export function getCaseStudyBySlug(slug: string): CaseStudyEntry | undefined {
-  return CASE_STUDIES.find((c) => c.slug === slug);
+  return CASE_STUDIES.find((c) => c.slug === slug)
 }
 
-export function getPrevNextSlugs(
-  slug: string,
-): { prev: CaseStudyEntry | null; next: CaseStudyEntry | null } {
-  const idx = CASE_STUDIES.findIndex((c) => c.slug === slug);
-  if (idx === -1) return { prev: null, next: null };
+export function getPrevNextSlugs(slug: string): {
+  prev: CaseStudyEntry | null
+  next: CaseStudyEntry | null
+} {
+  const idx = CASE_STUDIES.findIndex((c) => c.slug === slug)
+  if (idx === -1) return { prev: null, next: null }
   return {
-    prev: idx > 0 ? CASE_STUDIES[idx - 1] ?? null : null,
-    next: idx < CASE_STUDIES.length - 1 ? CASE_STUDIES[idx + 1] ?? null : null,
-  };
+    prev: idx > 0 ? (CASE_STUDIES[idx - 1] ?? null) : null,
+    next: idx < CASE_STUDIES.length - 1 ? (CASE_STUDIES[idx + 1] ?? null) : null,
+  }
 }

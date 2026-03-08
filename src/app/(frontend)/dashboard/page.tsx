@@ -6,25 +6,25 @@ import {
   SearchIcon,
   SettingsIcon,
   WebhookIcon,
-} from 'lucide-react';
-import Link from 'next/link';
-import type { ReactNode } from 'react';
+} from 'lucide-react'
+import Link from 'next/link'
+import type { ReactNode } from 'react'
 
-import { LayoutHeader, SectionSpacing } from '@/components/layout/elements';
-import { Main } from '@/components/layout/main';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { LayoutHeader, SectionSpacing } from '@/components/layout/elements'
+import { Main } from '@/components/layout/main'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 
-import { SignedIn } from '@daveyplate/better-auth-ui';
+import { SignedIn } from '@daveyplate/better-auth-ui'
 
 type Feature = {
-  title: string;
-  description: string;
-  link?: string;
-  icon: ReactNode;
-  status: 'live' | 'in-progress' | 'planned';
-  tags: string[];
-};
+  title: string
+  description: string
+  link?: string
+  icon: ReactNode
+  status: 'live' | 'in-progress' | 'planned'
+  tags: string[]
+}
 
 const features: Feature[] = [
   {
@@ -93,13 +93,13 @@ const features: Feature[] = [
     status: 'planned',
     tags: ['webhooks', 'events', 'async'],
   },
-];
+]
 
 const statusConfig = {
   live: { label: 'Live', variant: 'default' as const },
   'in-progress': { label: 'In Progress', variant: 'secondary' as const },
   planned: { label: 'Planned', variant: 'outline' as const },
-};
+}
 
 export default function DashboardPage() {
   return (
@@ -119,7 +119,7 @@ export default function DashboardPage() {
         </SignedIn>
         <div className="container mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => {
-            const status = statusConfig[feature.status];
+            const status = statusConfig[feature.status]
             return (
               <Link href={feature.link ?? ''}>
                 <div
@@ -150,10 +150,10 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </Link>
-            );
+            )
           })}
         </div>
       </SectionSpacing>
     </Main>
-  );
+  )
 }
