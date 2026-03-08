@@ -6,7 +6,7 @@ import { PDFParse } from 'pdf-parse';
 import { getPayload } from '@/lib/payload/get-payload';
 import { currentUser } from '@/lib/auth/context/get-context-props';
 import { ragChunksTable } from '@/collections/rag-docs/rag-chunks-table';
-import { embedTexts, EMBEDDING_DIM } from '@/lib/ai';
+import { embedTexts, EMBEDDING_DIM, generateAnswer } from '@/lib/ai';
 PDFParse.setWorker(getPath());
 
 /**
@@ -36,12 +36,11 @@ export async function ingestDocument(
   } else {
     textToChunk = [text];
   }
-
   const saveDoc = await payload.create({
     collection: 'rag-docs',
     data: {
       title: documentTitle,
-      content: text,
+      content: sourceFile ? sourceFile.name : trimmed,
       user: user.id,
     },
   });
@@ -77,6 +76,7 @@ export async function ingestDocument(
  * Phase 4: Add source metadata and citations in the response.
  */
 export async function queryRag(question: string): Promise<QueryResult> {
+  const payload = await getPayload();
   const q = question.trim();
   if (!q) {
     return {
@@ -85,14 +85,42 @@ export async function queryRag(question: string): Promise<QueryResult> {
     };
   }
 
-  // Placeholder: return last few stored chunks as "sources" and a static message.
-  // Phase 2: Embed the question, run similarity search over stored chunks, return top-k.
-  // Phase 3: Build context from retrieved chunks, call LLM, return answer.
-  // Phase 4: Format sources with doc title and map citations to chunks.
+  const [questionVec] = await embedTexts([q]);
+  const vectorStr = '[' + questionVec.join(',') + ']';
+  const TOP_K = 5;
+
+  const result = await payload.db.execute({
+    drizzle: payload.db.drizzle,
+    raw: `SELECT id, document_id, chunk_index, text, document_title FROM rag_chunks ORDER BY embedding <=> '${vectorStr}'::vector LIMIT ${TOP_K}`,
+  });
+
+  const rows = (result?.rows ?? []) as Array<{
+    id: number;
+    document_id: string;
+    chunk_index: number;
+    text: string;
+    document_title: string | null;
+  }>;
+
+  if (rows.length === 0) {
+    return {
+      answer:
+        'No relevant documents found. Ingest some documents first, then ask a question.',
+      sources: [],
+    };
+  }
+
+  const context = rows.map((r) => r.text).join('\n\n');
+  const answer = await generateAnswer(context, q);
+
   return {
-    answer:
-      'Implement Phase 2 (retrieval) and Phase 3 (generation) to see answers from your documents here.',
-    sources: [],
+    answer,
+    sources: rows.map((r) => ({
+      documentId: r.document_id,
+      documentTitle: r.document_title ?? undefined,
+      text: r.text,
+      chunkIndex: r.chunk_index,
+    })),
   };
 }
 
@@ -102,7 +130,7 @@ async function extractTextFromPDF(document: File): Promise<string[]> {
   const parser = new PDFParse({ data: buffer });
   const text = await parser.getText();
   parser.destroy();
-  return text.pages.map((page) => page.text);
+  return text.pages.map((page: { text: string }) => page.text);
 }
 
 async function chunkTexts(

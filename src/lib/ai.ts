@@ -24,6 +24,44 @@ function getHfClient(): InferenceClient {
   return hfClient;
 }
 
+/** Default model for RAG answer generation. Prefer smaller models for serverless HF. */
+const DEFAULT_GENERATION_MODEL = 'zai-org/GLM-5:zai-org';
+
+export async function generateAnswer(
+  context: string,
+  question: string,
+): Promise<string> {
+  const prompt = `Use only the following context to answer the question. If the answer is not in the context, say "I don't know" or that you couldn't find it.
+
+Context:
+${context}
+
+Question: ${question}
+
+Answer:`;
+
+  try {
+    const response = await getHfClient().chatCompletion({
+      model: DEFAULT_GENERATION_MODEL,
+      messages: [{ role: 'user', content: prompt }],
+      parameters: {
+        max_tokens: 256,
+        temperature: 0.2,
+      },
+    });
+    const content = response.choices?.[0]?.message?.content;
+    if (typeof content !== 'string') {
+      throw new Error(
+        'Unexpected chat completion response: no message content',
+      );
+    }
+    return content.trim();
+  } catch (error) {
+    console.error(error);
+    throw new Error('Unexpected chat completion response');
+  }
+}
+
 /**
  * Embed a single text. For multiple texts, prefer embedTexts for batching.
  */
