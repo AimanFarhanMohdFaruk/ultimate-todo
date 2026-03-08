@@ -8,8 +8,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
-import { ingestDocument, queryRag } from '@/services/RAG/rag-actions';
-import { IngestResult, QueryResult } from '@/services/RAG/rag-types';
+import {
+  ingestDocument,
+  queryRag,
+} from '@/collections/rag-docs/services/RAG/rag-actions';
+import {
+  IngestResult,
+  QueryResult,
+} from '@/collections/rag-docs/services/RAG/rag-types';
 import type { DemoProps } from './registry';
 
 const ACCEPT_TYPES = '.txt,.md,.pdf';
@@ -111,7 +117,7 @@ export default function EnterpriseRagDemo({ slug, title }: DemoProps) {
     try {
       const result: IngestResult = await ingestDocument(
         ingestText.trim(),
-        ingestTitle || undefined,
+        ingestTitle,
         droppedFile || null,
       );
       if (result.success) {

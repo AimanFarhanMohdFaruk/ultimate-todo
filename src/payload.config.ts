@@ -14,15 +14,7 @@ import { getServerSideURL } from './lib/payload';
 import { plugins } from './plugins';
 import { Todo } from './collections/todo';
 import { RagDocs } from './collections/rag-docs';
-import {
-  pgTable,
-  serial,
-  integer,
-  uuid,
-  timestamp,
-  vector,
-  text,
-} from '@payloadcms/db-postgres/drizzle/pg-core';
+import { ragChunksTable } from './collections/rag-docs/rag-chunks-table';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -80,20 +72,12 @@ export default buildConfig({
     idType: 'uuid',
     push: false,
     beforeSchemaInit: [
-      ({ schema, adapter }) => {
+      ({ schema }) => {
         return {
           ...schema,
           tables: {
             ...schema.tables,
-            rag_chunks: pgTable('rag_chunks', {
-              id: serial('id').notNull(),
-              document_id: uuid('document_id').notNull(),
-              chunk_index: integer('chunk_index').notNull(),
-              text: text('text').notNull(),
-              embedding: vector('embedding', { dimensions: 3072 }).notNull(),
-              document_title: text('document_title'),
-              created_at: timestamp('created_at').notNull().defaultNow(),
-            }),
+            rag_chunks: ragChunksTable,
           },
         };
       },

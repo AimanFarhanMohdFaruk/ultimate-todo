@@ -1,8 +1,12 @@
 'use server';
 
 import { getPath } from 'pdf-parse/worker';
-import type { IngestResult, QueryResult } from './rag-types';
+import type { IngestResult, QueryResult, RagChunk } from './rag-types';
 import { PDFParse } from 'pdf-parse';
+import { getPayload } from '@/lib/payload/get-payload';
+import { currentUser } from '@/lib/auth/context/get-context-props';
+import { ragChunksTable } from '@/collections/rag-docs/rag-chunks-table';
+import { embedTexts, EMBEDDING_DIM } from '@/lib/ai';
 PDFParse.setWorker(getPath());
 
 /**
@@ -11,9 +15,16 @@ PDFParse.setWorker(getPath());
  */
 export async function ingestDocument(
   text: string,
-  documentTitle?: string,
+  documentTitle: string,
   sourceFile?: File | null,
 ): Promise<IngestResult> {
+  const payload = await getPayload();
+  const user = await currentUser();
+
+  if (!user) {
+    return { success: false, message: 'Unauthorized' };
+  }
+
   const trimmed = text.trim();
   if (!trimmed && !sourceFile) {
     return { success: false, message: 'Please enter some text to ingest.' };
@@ -25,12 +36,37 @@ export async function ingestDocument(
   } else {
     textToChunk = [text];
   }
-  console.log(textToChunk);
+
+  const saveDoc = await payload.create({
+    collection: 'rag-docs',
+    data: {
+      title: documentTitle,
+      content: text,
+      user: user.id,
+    },
+  });
+
+  if (!saveDoc) {
+    return { success: false, message: 'Failed to save document' };
+  }
+
+  // Chunk and store
+  const chunks = await chunkTexts(textToChunk, saveDoc.id, documentTitle);
+
+  await payload.db.drizzle.insert(ragChunksTable).values(
+    chunks.map((chunk) => ({
+      document_id: chunk.documentId,
+      chunk_index: chunk.chunkIndex,
+      text: chunk.text,
+      embedding: chunk.embedding ?? new Array(EMBEDDING_DIM).fill(0),
+      document_title: chunk.documentTitle ?? null,
+    })),
+  );
 
   return {
     success: true,
-    message: `Stored as. Implement Phase 1: add chunking, embeddings, and your chosen storage.`,
-    chunkCount: 1,
+    message: `Ingested "${documentTitle}": ${chunks.length} chunk(s) stored.`,
+    chunkCount: chunks.length,
   };
 }
 
@@ -67,4 +103,20 @@ async function extractTextFromPDF(document: File): Promise<string[]> {
   const text = await parser.getText();
   parser.destroy();
   return text.pages.map((page) => page.text);
+}
+
+async function chunkTexts(
+  texts: string[],
+  documentId: string,
+  documentTitle: string,
+): Promise<RagChunk[]> {
+  const embeddings = await embedTexts(texts);
+  return texts.map((text, i) => ({
+    id: `chunk-${i}`,
+    text,
+    documentId,
+    embedding: embeddings[i],
+    documentTitle,
+    chunkIndex: i,
+  }));
 }
